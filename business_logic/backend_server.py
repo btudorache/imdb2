@@ -6,6 +6,9 @@ DEFAULT_PORT = 12345
 app = Flask(__name__)
 
 
+import review_requests
+
+
 @app.route("/")
 def hello_world():
     return "<p>Hello, World!</p>"
