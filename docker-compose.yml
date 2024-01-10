@@ -1,0 +1,113 @@
+version: '3.5'
+
+services:
+  users_db:
+    image: postgres
+    container_name: users_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: postgres
+    volumes:
+      - ./auth/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - auth
+      - internal
+
+  auth:
+    build: ./auth
+    container_name: auth
+    restart: always
+    ports:
+      - "8089:8089"
+    environment:
+      JWT_SECRET: secret
+      PGUSER: postgres
+      PGPASSWORD: 1234
+      PGDATABASE: postgres
+      PGHOST: users_db
+    networks:
+      - auth
+      - internal
+    depends_on:
+      - users_db
+
+  # TODO: backend services
+  # business-service:
+  #   build: ./business
+  #   container_name: business
+  #   restart: always
+  #   tty: true
+  #   ports:
+  #     - "5000:5000"
+  #   networks:
+  #     - network_internal
+
+  # db:
+  #   image: postgres:latest
+  #   container_name: library_db
+  #   restart: always
+  #   volumes:
+  #     - library_db:/var/lib/postgresql/data
+  #     - ./io/db/init_library_db.sql:/docker-entrypoint-initdb.d/init_library_db.sql
+  #   ports:
+  #     - '42069:5432'
+  #   networks:
+  #     - network_cli
+  #     - network_gui
+  #   env_file: ./io/env/postgres.env
+
+  # library_manager:
+  #     depends_on:
+  #       - library_db
+  #     image: dpage/pgadmin4
+  #     container_name: library_manager
+  #     restart: always
+  #     ports:
+  #       - "5050:80"
+  #     networks:
+  #       - network_gui
+  #     env_file: ./io/env/pgadmin.env
+
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8080:8080
+    environment:
+      DOZZLE_REMOTE_HOST: tcp://business-service:5000,tcp://auth:8089
+    networks:
+      - internal
+
+  agent:
+    container_name: portainer_agent
+    image: portainer/agent:2.11.1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+      - internal
+
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:2.11.1
+    command: -H tcp://agent:9001 --tlsskipverify
+    ports:
+      - "9443:9443"
+      - "9000:9000"
+      - "8002:8000"
+    volumes:
+      - portainer_data:/data
+    networks:
+      - internal
+
+networks:
+  auth:
+  internal:
+
+volumes:
+  portainer_data:
+      driver: local
