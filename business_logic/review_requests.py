@@ -1,10 +1,10 @@
-import collections
 import json
 
 from flask import Response, request
 from http import HTTPStatus
 
 from database import cursor, db
+from authorize_utils import authorize
 
 from __main__ import app
 
@@ -32,8 +32,17 @@ COMMENT_DEL_REQ_KEYS = [
 ]
 
 
+def verify_token():
+    token = request.headers.get("Authorization").split()[1]
+
+    return authorize(token)
+
+
 @app.route("/movies/review/score", methods=[POST, DELETE])
 def movie_score():
+    if not verify_token():
+        return Response(status=HTTPStatus.UNAUTHORIZED)
+
     body = request.get_json()
 
     if request.method == POST:
@@ -77,6 +86,9 @@ def movie_score():
 
 @app.route("/movies/review/comment", methods=[POST, DELETE])
 def movie_comment():
+    if not verify_token():
+        return Response(status=HTTPStatus.UNAUTHORIZED)
+
     body = request.get_json()
 
     if request.method == POST:
@@ -123,6 +135,9 @@ def movie_comment():
 
 @app.route('/movies', methods=["POST"])
 def add_movie():
+    if not verify_token():
+        return Response(status=HTTPStatus.UNAUTHORIZED)
+
     body = request.get_json()
 
     if "title" not in body.keys():
@@ -151,6 +166,9 @@ def add_movie():
 
 @app.route('/movies/<int:movie_id>', methods=["DELETE"])
 def delete_movie(movie_id):
+    if not verify_token():
+        return Response(status=HTTPStatus.UNAUTHORIZED)
+
     query = "DELETE FROM MOVIES WHERE id = %s"
     values = (movie_id,)
     try:
@@ -164,6 +182,9 @@ def delete_movie(movie_id):
 
 @app.route('/movies', methods=["GET"])
 def get_all_movies():
+    if not verify_token():
+        return Response(status=HTTPStatus.UNAUTHORIZED)
+
     query = "SELECT * FROM MOVIES"
     cursor.execute(query)
 
@@ -184,6 +205,9 @@ def get_all_movies():
 
 @app.route('/movies/<int:movie_id>', methods=["GET"])
 def get_movie_by_id(movie_id):
+    if not verify_token():
+        return Response(status=HTTPStatus.UNAUTHORIZED)
+
     query = "SELECT * FROM MOVIES where id = %s"
     values = (movie_id,)
     cursor.execute(query, values)
@@ -204,6 +228,9 @@ def get_movie_by_id(movie_id):
 
 @app.route('/movies/favorite', methods=["POST"])
 def add_movie_to_favorites():
+    if not verify_token():
+        return Response(status=HTTPStatus.UNAUTHORIZED)
+
     body = request.get_json()
 
     if "id_user" not in body.keys():
@@ -226,6 +253,9 @@ def add_movie_to_favorites():
 
 @app.route('/movies/favorite', methods=["DELETE"])
 def remove_movie_from_favorites():
+    if not verify_token():
+        return Response(status=HTTPStatus.UNAUTHORIZED)
+
     body = request.get_json()
 
     if "id_user" not in body.keys():
