@@ -7,6 +7,7 @@ app = Flask(__name__)
 
 
 import review_requests
+import filter_requests
 
 
 @app.route("/")
