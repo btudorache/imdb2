@@ -19,6 +19,8 @@ services:
   auth:
     build: ./auth
     container_name: auth
+    labels:
+      kompose.service.type: LoadBalancer
     restart: always
     ports:
       - "8089:8089"
@@ -99,6 +101,8 @@ services:
   api:
     build: ./business_logic
     container_name: api
+    labels:
+      kompose.service.type: LoadBalancer
     restart: always
     ports:
       - "12345:12345"
