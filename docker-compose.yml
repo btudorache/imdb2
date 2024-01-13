@@ -10,6 +10,7 @@ services:
       POSTGRES_PASSWORD: 1234
       POSTGRES_DB: postgres
     volumes:
+      - ./postgres-data:/var/lib/postgresql/data
       - ./auth/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
@@ -17,7 +18,7 @@ services:
       - auth
 
   auth:
-    build: ./auth
+    image: octaviantorcea/imdb2:imdb2_auth
     container_name: auth
     labels:
       kompose.service.type: LoadBalancer
@@ -99,7 +100,7 @@ services:
       - api
 
   api:
-    build: ./business_logic
+    image: octaviantorcea/imdb2:imdb2_api
     container_name: api
     labels:
       kompose.service.type: LoadBalancer
@@ -120,3 +121,4 @@ networks:
 volumes:
   mysql-movies:
   portainer_data:
+  postgres-data:
