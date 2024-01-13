@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: portainer
+  name: portainer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: portainer
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes hostPath
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/imdb2-default: "true"
+        io.kompose.service: portainer
+    spec:
+      containers:
+        - args:
+            - -H
+            - tcp://agent:9001
+            - --tlsskipverify
+          image: portainer/portainer-ce:2.11.1
+          name: portainer
+          ports:
+            - containerPort: 9443
+              hostPort: 9443
+              protocol: TCP
+            - containerPort: 9000
+              hostPort: 9000
+              protocol: TCP
+            - containerPort: 8000
+              hostPort: 8002
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: /data
+              name: portainer-data
+      restartPolicy: Always
+      volumes:
+        - hostPath:
+            path: /mnt/c/Users/bogdan/Desktop/facultate/cc/imdb2
+          name: portainer-data
+status: {}
