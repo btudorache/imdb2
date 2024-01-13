@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.31.2 (a92241f79)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: dozzle
+  name: dozzle
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: dozzle
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f ../docker-compose.yml
+        kompose.version: 1.31.2 (a92241f79)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/imdb2-default: "true"
+        io.kompose.service: dozzle
+    spec:
+      containers:
+        - env:
+            - name: DOZZLE_REMOTE_HOST
+              value: tcp://api:12345,tcp://auth:8089
+          image: amir20/dozzle:latest
+          name: dozzle
+          ports:
+            - containerPort: 8080
+              hostPort: 8081
+              protocol: TCP
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/run/docker.sock
+              name: dozzle-claim0
+      restartPolicy: Always
+      volumes:
+        - name: dozzle-claim0
+          persistentVolumeClaim:
+            claimName: dozzle-claim0
+status: {}
