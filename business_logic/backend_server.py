@@ -8,6 +8,8 @@ app = Flask(__name__)
 
 import review_requests
 import filter_requests
+import admin_requests
+import favorite_requests
 
 
 @app.route("/")
