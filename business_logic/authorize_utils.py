@@ -3,7 +3,7 @@ import requests
 
 def authorize(token):
     body = requests.get(
-            "http://localhost:8089/authorize",
+            "http://auth:8089/authorize",
             headers={
                 "Authorization": f"Bearer {token}"
             }
