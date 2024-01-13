@@ -7,8 +7,8 @@ metadata:
     kompose.version: 1.31.2 (a92241f79)
   creationTimestamp: null
   labels:
-    io.kompose.service: api-tcp
-  name: api-tcp
+    io.kompose.service: api
+  name: api
 spec:
   ports:
     - name: "12345"
