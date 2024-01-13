@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: portainer-clusterrole
+rules:
+- apiGroups: [""]  # "" indicates the core API group
+  resources: ["*"]  # "*" means all resources
+  verbs: ["*"]      # "*" means all actions (create, list, delete, etc.)
+- apiGroups: ["apps"]
+  resources: ["*"]
+  verbs: ["*"]
+- apiGroups: ["batch"]
+  resources: ["*"]
+  verbs: ["*"]
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["pods"]
+  verbs: ["*"]
