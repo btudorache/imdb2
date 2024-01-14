@@ -30,5 +30,10 @@ Pe baza stack-ului docker-compose am portat aplicatia pentru a fi rulata in Kube
 
 Am facut deploy la stack-ul de kubernetes pe Azure. Resursele de pe Azure au fost create folosind configuratii de Terraform. Serviciile pot fi accesate la urmatoarele rute:
 
+Deployment-ul cu resursele Azure create manual:
+* auth 20.101.173.10
+* api 20.101.172.198
+
+Deployment-ul prin resursele Azure create cu Terraform:
 * api: 4.157.142.24
 * auth: 4.157.142.142
