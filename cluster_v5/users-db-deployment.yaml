@@ -1,10 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f ../docker-compose.yml
-    kompose.version: 1.31.2 (a92241f79)
-  creationTimestamp: null
   labels:
     io.kompose.service: users-db
   name: users-db
@@ -17,12 +13,7 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert -f ../docker-compose.yml
-        kompose.version: 1.31.2 (a92241f79)
-      creationTimestamp: null
       labels:
-        io.kompose.network/imdb2-auth: "true"
         io.kompose.service: users-db
     spec:
       containers:
@@ -37,23 +28,19 @@ spec:
           name: users-db
           ports:
             - containerPort: 5432
-              hostPort: 5432
-              protocol: TCP
-          resources: {}
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
-              name: users-db-claim0
+              name: users-db-pvc
             - name: user-db-initdb
               mountPath: /docker-entrypoint-initdb.d
       restartPolicy: Always
       volumes:
-        - name: users-db-claim0
+        - name: users-db-pvc
           persistentVolumeClaim:
-            claimName: users-db-claim0
+            claimName: users-db-pvc
         - name: user-db-initdb
           configMap:
             name: user-db-initdb-config
-status: {}
 ---
 apiVersion: v1
 kind: ConfigMap
