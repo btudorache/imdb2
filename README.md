@@ -26,4 +26,8 @@ Felul in care interactioneaza serviciile poate fi vazut in diagrama urmatoare:
 
 Am containerizat toate aceste servicii si am construit un stack docker-compose pe baza lor.
 
-Pe baza stack-ului docker-compose am portat aplicatia pentru a fi rulata in Kubernetes. Serviciile ruleaza peste un cluster cu 2 workeri si un control plane. Pentru deployment-ul pe Kubernetes am folosit Prometheus pentru monitorizare si logging in loc de Dozzle.
+Pe baza stack-ului docker-compose am portat aplicatia pentru a fi rulata in Kubernetes. Serviciile ruleaza peste un cluster cu 2 workeri si un control plane. In deployment-ul pe Kubernetes am folosit Prometheus pentru monitorizare si dashboard-ul oferit de Kubernetes pentru logging in loc de Dozzle.
+
+Am facut deploy la stack-ul de kubernetes pe Azure. Serviciile pot fi accesate la urmatoarele rute:
+api: 20.101.172.198:12345
+auth: 20.101.173.10:8089
