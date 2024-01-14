@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: db
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              value: movies
+            - name: MYSQL_PASSWORD
+              value: tema
+            - name: MYSQL_ROOT_PASSWORD
+              value: tema
+            - name: MYSQL_USER
+              value: tema
+          image: mysql:latest
+          name: db
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mysql-movies
+            - name: db-initdb
+              mountPath: /docker-entrypoint-initdb.d
+      restartPolicy: Always
+      volumes:
+        - name: mysql-movies
+          persistentVolumeClaim:
+            claimName: mysql-movies
+        - name: db-initdb
+          configMap:
+            name: db-initdb-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-initdb-config
+data:
+  initdb.sql: |
+    SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+    START TRANSACTION;
+    SET time_zone = "+00:00";
+
+    CREATE TABLE IF NOT EXISTS `COMMENTS` (
+      `id` bigint NOT NULL,
+      `comment` varchar(256) NOT NULL,
+      `id_user` bigint NOT NULL,
+      `id_movie` bigint NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+    
+    CREATE TABLE IF NOT EXISTS `FAVORITE` (
+      `id` bigint NOT NULL,
+      `id_user` bigint NOT NULL,
+      `id_movie` bigint NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+    
+    CREATE TABLE IF NOT EXISTS `MOVIES` (
+      `id` bigint NOT NULL,
+      `title` varchar(100) NOT NULL,
+      `year` int NOT NULL,
+      `genre` varchar(20) NOT NULL,
+      `director` varchar(50) NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+    
+    INSERT INTO `MOVIES` (`id`, `title`, `year`, `genre`, `director`) VALUES
+    (1, 'un filme', 1900, 'drama', 'jmekeru');
+    
+    CREATE TABLE IF NOT EXISTS `SCORES` (
+      `id` bigint NOT NULL,
+      `score` int NOT NULL,
+      `id_movie` bigint NOT NULL,
+      `id_user` bigint NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+    
+    ALTER TABLE `COMMENTS`
+      ADD PRIMARY KEY (`id`);
+    
+    ALTER TABLE `FAVORITE`
+      ADD PRIMARY KEY (`id`);
+    
+    ALTER TABLE `MOVIES`
+      ADD PRIMARY KEY (`id`);
+    
+    ALTER TABLE `SCORES`
+      ADD PRIMARY KEY (`id`);
+    
+    ALTER TABLE `COMMENTS`
+      MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+    
+    ALTER TABLE `FAVORITE`
+      MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+    
+    ALTER TABLE `MOVIES`
+      MODIFY `id` bigint NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+    
+    ALTER TABLE `SCORES`
+      MODIFY `id` bigint NOT NULL AUTO_INCREMENT;
+    COMMIT;

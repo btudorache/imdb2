@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auth
+  name: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - env:
+            - name: JWT_SECRET
+              value: secret
+            - name: PGDATABASE
+              value: postgres
+            - name: PGHOST
+              value: users-db
+            - name: PGPASSWORD
+              value: "1234"
+            - name: PGUSER
+              value: postgres
+          image: octaviantorcea/imdb2:imdb2_auth-v2.0
+          name: auth
+          ports:
+            - containerPort: 8089
+      restartPolicy: Always

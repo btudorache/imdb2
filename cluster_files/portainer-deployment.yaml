@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: portainer
+  name: portainer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: portainer
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: portainer
+    spec:
+      containers:
+        - image: portainer/portainer-ce:latest
+          name: portainer
+          ports:
+            - containerPort: 9443
+          volumeMounts:
+            - mountPath: /var/run/docker.sock
+              name: portainer-pvc
+      restartPolicy: Always
+      volumes:
+        - name: portainer-pvc
+          persistentVolumeClaim:
+            claimName: portainer-pvc

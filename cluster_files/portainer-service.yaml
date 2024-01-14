@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: portainer
+  name: portainer
+spec:
+  ports:
+    - name: "9443"
+      port: 9443
+      targetPort: 9443
+      nodePort: 30004
+  selector:
+    app: portainer
+  type: NodePort
