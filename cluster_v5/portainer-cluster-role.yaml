@@ -3,15 +3,15 @@ kind: ClusterRole
 metadata:
   name: portainer-clusterrole
 rules:
-- apiGroups: [""]  # "" indicates the core API group
-  resources: ["*"]  # "*" means all resources
-  verbs: ["*"]      # "*" means all actions (create, list, delete, etc.)
+- apiGroups: [""]
+  resources: ["*"]
+  verbs: ["*"]
 - apiGroups: ["apps"]
   resources: ["*"]
   verbs: ["*"]
 - apiGroups: ["batch"]
   resources: ["*"]
   verbs: ["*"]
-- apiGroups: [""] # "" indicates the core API group
+- apiGroups: [""]
   resources: ["pods"]
   verbs: ["*"]

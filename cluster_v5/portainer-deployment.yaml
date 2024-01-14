@@ -1,10 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f ../docker-compose.yml
-    kompose.version: 1.31.2 (a92241f79)
-  creationTimestamp: null
   labels:
     io.kompose.service: portainer
   name: portainer
@@ -17,12 +13,7 @@ spec:
     type: Recreate
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert -f ../docker-compose.yml
-        kompose.version: 1.31.2 (a92241f79)
-      creationTimestamp: null
       labels:
-        io.kompose.network/imdb2-default: "true"
         io.kompose.service: portainer
     spec:
       containers:
@@ -30,20 +21,11 @@ spec:
           name: portainer
           ports:
             - containerPort: 9443
-              hostPort: 9443
-              protocol: TCP
-          resources: {}
           volumeMounts:
-            - mountPath: /data
-              name: data
             - mountPath: /var/run/docker.sock
-              name: portainer-claim1
+              name: portainer-pvc
       restartPolicy: Always
       volumes:
-        - name: data
+        - name: portainer-pvc
           persistentVolumeClaim:
-            claimName: data
-        - name: portainer-claim1
-          persistentVolumeClaim:
-            claimName: portainer-claim1
-status: {}
+            claimName: portainer-pvc
