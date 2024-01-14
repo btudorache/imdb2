@@ -28,6 +28,6 @@ Am containerizat toate aceste servicii si am construit un stack docker-compose p
 
 Pe baza stack-ului docker-compose am portat aplicatia pentru a fi rulata in Kubernetes. Serviciile ruleaza peste un cluster cu 2 workeri si un control plane. In deployment-ul pe Kubernetes am folosit Prometheus pentru monitorizare si dashboard-ul oferit de Kubernetes pentru logging in loc de Dozzle.
 
-Am facut deploy la stack-ul de kubernetes pe Azure. Serviciile pot fi accesate la urmatoarele rute:
-api: 20.101.172.198:12345
-auth: 20.101.173.10:8089
+Am facut deploy la stack-ul de kubernetes pe Azure. Resursele de pe Azure au fost create folosind configuratii de Terraform. Serviciile pot fi accesate la urmatoarele rute:
+api: 4.157.142.24
+auth: 4.157.142.142
