@@ -1,27 +1,29 @@
 # IMDB 2
 
+## Membrii echipei
 
-## Requirements
+* Torcea Octavian SSA-1C
+* Tudorache Bogdan-Mihai SSA-1C
+* Raluca Vasilache SSA-1C
 
-* python >= 3.10
+## Descriere
 
+Proiectul este o implementare a unei aplicatii de gestionare a filmelor. Administratorii pot crea si adauga filme noi in baza de date, iar utilizatorii pot cauta filme dupa anumite filtre si pot creea liste de filme preferate.
 
-## Installation guide
+Pentru implementare folosim urmatoarele servicii:
 
-In a command line window, run the following:
-```
-pip install -r requirements.txt
-```
+* Serviciu de autentificare (auth) folosind tokeni JWT, implementat in Node.js
+* Baza de date (Postgres SQL) folosita de serviciul de autentificare pentru inregistrarea utilizatorilor
+* Serviciu principal, care ofera functionalitatile de gestionare a filmelor, implementat in Python
+* Baza de date pentru filme (MySQL) folosita de serviciul principal
+* Interfata de gestionare a bazei de date principale (PHPMyAdmin)
+* Serviciu de vizualizare log-uri pentru toate containerele (Dozzle)
+* Interfata de gestionare a containerelor (Portainer)
 
-**NOTE: It is recommended to use a virtual environment, such as Conda or
-Virtualenv, before installing the requirements.**
+Felul in care interactioneaza serviciile poate fi vazut in diagrama urmatoare:
 
-## Running the app
+![Diagrama servicii](./diagram.png)
 
-Simply run in a command line window:
-```
-python ./business_logic/backend_server.py
-```
+Am containerizat toate aceste servicii si am construit un stack docker-compose pe baza lor.
 
-If you access `http://127.0.0.1:12345/` in a browser, you should see a page
-with the message `Hello, World!` displayed.
+Pe baza stack-ului docker-compose am portat aplicatia pentru a fi rulata in Kubernetes. Serviciile ruleaza peste un cluster cu 2 workeri si un control plane. Pentru deployment-ul pe Kubernetes am folosit Prometheus pentru monitorizare si logging in loc de Dozzle.
