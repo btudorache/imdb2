@@ -1,13 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -f ../docker-compose.yml
-    kompose.service.type: LoadBalancer
-    kompose.version: 1.31.2 (a92241f79)
-    prometheus.io/scrape: 'true'
-    prometheus.io/port:   '9090'
-  creationTimestamp: null
   labels:
     io.kompose.service: api
   name: api
@@ -16,17 +9,9 @@ spec:
   selector:
     matchLabels:
       io.kompose.service: api
-  strategy: {}
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert -f ../docker-compose.yml
-        kompose.service.type: LoadBalancer
-        kompose.version: 1.31.2 (a92241f79)
-      creationTimestamp: null
       labels:
-        io.kompose.network/imdb2-api: "true"
-        io.kompose.network/imdb2-api-auth: "true"
         io.kompose.service: api
     spec:
       containers:
@@ -34,8 +19,4 @@ spec:
           name: api
           ports:
             - containerPort: 12345
-              hostPort: 12345
-              protocol: TCP
-          resources: {}
       restartPolicy: Always
-status: {}
