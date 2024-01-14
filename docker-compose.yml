@@ -57,6 +57,7 @@ services:
       - '3306:3306'
     volumes:
       - mysql-movies:/var/lib/mysql
+      - ./business_logic/movies.sql:/docker-entrypoint-initdb.d/movies.sql
     networks:
       - api
 
