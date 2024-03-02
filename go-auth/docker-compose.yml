@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  users_db:
+    image: postgres:latest
+    restart: always
+    networks:
+      - auth
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: postgres
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  auth:
+    build: .
+    restart: always
+    ports:
+      - "8082:8082"
+    networks:
+      - auth
+    environment:
+      JWT_SECRET: secret
+      PGUSER: postgres
+      PGPASSWORD: 1234
+      PGDATABASE: postgres
+      PGHOST: users_db
+    depends_on:
+      - users_db
+
+networks:
+  auth:
+  
