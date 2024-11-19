@@ -1,6 +1,6 @@
 from flask import Flask
 
-DEFAULT_HOST = "0.0.0.0"
+DEFAULT_HOST = "localhost"
 DEFAULT_PORT = 12345
 
 app = Flask(__name__)
